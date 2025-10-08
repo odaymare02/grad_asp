@@ -1,0 +1,13 @@
+bin/
+obj/
+*.user
+*.suo
+*.userosscahe
+*.sln.docstates
+.vs/
+.vscode/
+**/packages/build/
+*.log
+*.back
+*.backup
+appsettings.Development.json
