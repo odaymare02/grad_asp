@@ -77,6 +77,8 @@ namespace Graduation_project
             builder.Services.AddScoped<IEmailSender, SendEmail>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<ICourseService,CourseService>();
+
             //builder.Services.AddScoped<RagService>();
 
             builder.Services.AddControllers();

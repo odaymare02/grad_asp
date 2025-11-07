@@ -15,9 +15,9 @@ namespace Graduate.BLL.Services.Clasess
         {
             _httpClient = httpClient;
         }
-        public async Task<RagResponse> GetRagResponseAsync(string question, string major)
+        public async Task<RagResponse> GetRagResponseAsync(string question, string major, List<string> completedCourses)
         {
-            var payload = new { query = question, major = major };
+            var payload = new { query = question, major = major ,completedCourses = completedCourses };
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync("/api/ask", content);

@@ -60,7 +60,7 @@ namespace Graduation_project.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpPatch("ChangePassword")]
-        [Authorize] // لازم يكون المستخدم مسجل دخول
+        [Authorize] 
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

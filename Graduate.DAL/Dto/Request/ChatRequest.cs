@@ -12,5 +12,6 @@ namespace Graduate.DAL.Dto.Request
         public string Role { get; set; } // "user" or "bot"
         public string Content { get; set; }
         public string Major { get; set; } // التخصص
+        public List<string>? CompletedCourses { get; set; }
     }
 }

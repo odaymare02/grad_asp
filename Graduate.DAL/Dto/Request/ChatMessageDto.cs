@@ -11,7 +11,7 @@ namespace Graduate.DAL.Dto.Request
     {
         public int Id { get; set; }
         public string Role { get; set; }
-
+        public string Major { get; set; }
         public int ChatSessionId { get; set; }
         public RagResponse BotResponse { get; set; }
         public string Content { get; set; }

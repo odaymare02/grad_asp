@@ -19,6 +19,8 @@ namespace Graduate.DAL.Data
         }
        public DbSet<ChatSession>ChatSessions { get; set; }
         public DbSet<ChatMessage>ChatMessages { get; set; }
+        public DbSet<CompletedCourses> CompletedCourses{ get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

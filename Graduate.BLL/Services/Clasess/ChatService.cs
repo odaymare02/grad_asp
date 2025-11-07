@@ -30,14 +30,14 @@ namespace Graduate.BLL.Services.Clasess
         }
         public async Task<ChatMessageDto> AddMessageAsync(ChatRequest request)
         {
-            //using var transaction = await _context.Database.BeginTransactionAsync();
-            // 1️⃣ تخزين رسالة المستخدم
+           
             var userMessage = new ChatMessage
             {
                 ChatSessionId = request.SessionId,
                 Role = request.Role,
                 Content = request.Content,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Major=request.Major
             };
             _context.ChatMessages.Add(userMessage);
 
@@ -51,20 +51,26 @@ namespace Graduate.BLL.Services.Clasess
 
             await _context.SaveChangesAsync();
 
-            // 2️⃣ استدعاء RAG والرد بالبوت
+            
             ChatMessage botMessage = null;
             if (request.Role == "user")
             {
-                var ragResponse = await _ragService.GetRagResponseAsync(request.Content, request.Major);
+                if (string.IsNullOrEmpty(request.Major))
+                    request.Major = "عام";
+                var completedCourses = request.CompletedCourses ?? new List<string>();
 
+                var ragResponse = await _ragService.GetRagResponseAsync(request.Content, request.Major,completedCourses);
                 botMessage = new ChatMessage
                 {
                     ChatSessionId = request.SessionId,
                     Role = "bot",
-                    Content = ragResponse.Result 
+                    Content = ragResponse?.Result ?? "⚠️ لم يتمكن النظام من توليد رد.",
+                    Major = request.Major
                 };
+
                 _context.ChatMessages.Add(botMessage);
                 await _context.SaveChangesAsync();
+
                 return new ChatMessageDto
                 {
                     Id = botMessage.ChatMessageId,
@@ -72,7 +78,8 @@ namespace Graduate.BLL.Services.Clasess
                     ChatSessionId = botMessage.ChatSessionId,
                     Content = botMessage.Content,
                     BotResponse = ragResponse,
-                    CreatedAt = botMessage.CreatedAt
+                    CreatedAt = botMessage.CreatedAt,
+                    Major = botMessage.Major
                 };
             }
 
@@ -128,7 +135,8 @@ namespace Graduate.BLL.Services.Clasess
                Role = m.Role,
                Content = m.Content,
                ChatSessionId=session.ChatSessionId,
-               CreatedAt = m.CreatedAt
+               CreatedAt = m.CreatedAt,
+               Major=m.Major
            }).ToList()
             };
         }
@@ -204,7 +212,7 @@ namespace Graduate.BLL.Services.Clasess
             var document = new MigraDoc.DocumentObjectModel.Document();
             var section = document.AddSection();
 
-            // استخدم الخط العربي المثبت على النظام
+            
             string fontName = "Scheherazade";
 
             var titleStyle = document.Styles.AddStyle("TitleStyle", "Normal");
@@ -241,7 +249,7 @@ namespace Graduate.BLL.Services.Clasess
                 section.AddParagraph(" ");
             }
 
-            var pdfRenderer = new PdfDocumentRenderer(true); // unicode
+            var pdfRenderer = new PdfDocumentRenderer(true); 
             pdfRenderer.Document = document;
             pdfRenderer.RenderDocument();
 
