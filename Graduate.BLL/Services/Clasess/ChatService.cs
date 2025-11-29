@@ -59,7 +59,7 @@ namespace Graduate.BLL.Services.Clasess
                     request.Major = "عام";
                 var completedCourses = request.CompletedCourses ?? new List<string>();
 
-                var ragResponse = await _ragService.GetRagResponseAsync(request.Content, request.Major,completedCourses);
+                var ragResponse = await _ragService.GetRagResponseAsync(request.Content, request.Major,completedCourses,request.Year,request.Semester);
                 botMessage = new ChatMessage
                 {
                     ChatSessionId = request.SessionId,
@@ -79,7 +79,8 @@ namespace Graduate.BLL.Services.Clasess
                     Content = botMessage.Content,
                     BotResponse = ragResponse,
                     CreatedAt = botMessage.CreatedAt,
-                    Major = botMessage.Major
+                    Major = botMessage.Major,
+                   
                 };
             }
 

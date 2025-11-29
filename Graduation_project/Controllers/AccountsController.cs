@@ -30,7 +30,8 @@ namespace Graduation_project.Controllers
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromQuery] string userId)
         {
             var result = await _authService.ConfirmEmail(token, userId);
-            return result.Success ? Ok(result) : BadRequest(result);
+
+            return result.Success ? Redirect("http://localhost:5173/verified?status=success") : Redirect("http://localhost:5173/verified?status=failed");
         }
         [HttpPost("resend-confirmation")]
         public async Task<IActionResult> ResendConfirmation([FromBody] EmailRequest request)
